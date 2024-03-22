@@ -11,4 +11,9 @@ object Constants {
         const val TOP_HEADINGS = "v2/top-headlines"
         const val EVERYTHING = "v2/everything"
     }
+
+    object Error {
+        const val SOMETHING_WENT_WRONG = "Something went wrong"
+        const val NO_INTERNET = "No Internet"
+    }
 }

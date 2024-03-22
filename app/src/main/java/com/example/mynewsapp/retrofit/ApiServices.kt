@@ -10,12 +10,16 @@ interface ApiServices {
 
     @GET(Constants.ServerUrls.TOP_HEADINGS)
     suspend fun getTopHeadings(
-        @Query("country") country: String = "in"
+        @Query("country") country: String = "in",
+        @Query("pageSize") pageSize: Int = 10,
+        @Query("page") page: Int,
     ): Response<NewsResponse>
 
     @GET(Constants.ServerUrls.EVERYTHING)
     suspend fun searchNews(
-        @Query("q") query: String
+        @Query("q") query: String,
+        @Query("pageSize") pageSize: Int = 10,
+        @Query("page") page: Int,
     ): Response<NewsResponse>
 
 }

@@ -21,8 +21,9 @@ class NewsPagingSource(private val apiServices: ApiServices, private val search:
                 if (search.isEmpty()) apiServices.getTopHeadings(page = pageNumber) else apiServices.searchNews(
                     query = search, page = pageNumber
                 )
+            val list = response.body()?.articles?.filter { it.title != "[Removed]" }
             return if (response.isSuccessful) LoadResult.Page(
-                data = response.body()?.articles ?: emptyList(),
+                data = list ?: emptyList(),
                 prevKey = if (pageNumber > 1) pageNumber - 1 else null,
                 nextKey = if ((response.body()?.articles?.size
                         ?: 0) < 10

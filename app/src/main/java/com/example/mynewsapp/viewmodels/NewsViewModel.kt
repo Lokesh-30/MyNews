@@ -1,5 +1,6 @@
 package com.example.mynewsapp.viewmodels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -12,5 +13,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class NewsViewModel @Inject constructor(private val repository: NewsRepository) : ViewModel() {
-    fun getNews(search: String) = repository.getNews(search).cachedIn(viewModelScope)
+
+    val errorHandler: MutableLiveData<String> = MutableLiveData()
+    fun getNews(search: String) = repository.getNews(search, errorHandler).cachedIn(viewModelScope)
 }

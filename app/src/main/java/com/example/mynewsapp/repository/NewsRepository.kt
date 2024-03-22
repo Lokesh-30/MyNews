@@ -1,5 +1,6 @@
 package com.example.mynewsapp.repository
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
@@ -13,8 +14,8 @@ import javax.inject.Inject
  */
 class NewsRepository @Inject constructor(private val apiServices: ApiServices) {
 
-    fun getNews(search: String) = Pager(
+    fun getNews(search: String, errorHandler: MutableLiveData<String>) = Pager(
         config = PagingConfig(pageSize = 10, prefetchDistance = 6),
-        pagingSourceFactory = { NewsPagingSource(apiServices, search) }
+        pagingSourceFactory = { NewsPagingSource(apiServices, search, errorHandler) }
     ).liveData
 }

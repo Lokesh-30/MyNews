@@ -11,6 +11,7 @@ import com.example.mynewsapp.viewmodels.NewsViewModel
 import com.example.mynewsapp.databinding.ActivityMainBinding
 import com.example.mynewsapp.utils.Constants
 import com.example.mynewsapp.utils.checkForInternet
+import com.example.mynewsapp.utils.observe
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -31,9 +32,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(mainBinding.root)
 
         newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
-
+        observe(newsViewModel.errorHandler, ::errorHandler)
         initViews()
         hitNewsApi()
+    }
+
+    private fun errorHandler(error: String) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
 
     /**

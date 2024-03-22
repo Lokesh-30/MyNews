@@ -5,6 +5,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.mynewsapp.NewsApp
 
+/**
+ * Internet Connectivity Checker
+ */
 fun checkForInternet(context: Context = NewsApp().applicationContext): Boolean {
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

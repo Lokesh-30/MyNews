@@ -8,6 +8,9 @@ import retrofit2.http.Query
 
 interface ApiServices {
 
+    /**
+     * Api used to get the Top Headings
+     */
     @GET(Constants.ServerUrls.TOP_HEADINGS)
     suspend fun getTopHeadings(
         @Query("country") country: String = "in",
@@ -15,6 +18,10 @@ interface ApiServices {
         @Query("page") page: Int,
     ): Response<NewsResponse>
 
+    /**
+     * Api used to search through the News
+     * @param query It is the string to be searched for
+     */
     @GET(Constants.ServerUrls.EVERYTHING)
     suspend fun searchNews(
         @Query("q") query: String,

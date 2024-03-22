@@ -7,6 +7,9 @@ import com.example.mynewsapp.repository.NewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+/**
+ * View model to hold data for the UI
+ */
 @HiltViewModel
 class NewsViewModel @Inject constructor(private val repository: NewsRepository) : ViewModel() {
     fun getNews(search: String) = repository.getNews(search).cachedIn(viewModelScope)

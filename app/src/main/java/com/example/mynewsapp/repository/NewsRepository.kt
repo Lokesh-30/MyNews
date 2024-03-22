@@ -7,10 +7,14 @@ import com.example.mynewsapp.paging.NewsPagingSource
 import com.example.mynewsapp.retrofit.ApiServices
 import javax.inject.Inject
 
+/**
+ * Repository handles the data given by the data source
+ * @param apiServices Contains the API's to get the data from Server
+ */
 class NewsRepository @Inject constructor(private val apiServices: ApiServices) {
 
     fun getNews(search: String) = Pager(
-        config = PagingConfig(pageSize = 10, maxSize = 100),
+        config = PagingConfig(pageSize = 10, prefetchDistance = 6),
         pagingSourceFactory = { NewsPagingSource(apiServices, search) }
     ).liveData
 }

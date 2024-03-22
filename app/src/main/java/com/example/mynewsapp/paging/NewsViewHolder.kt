@@ -13,6 +13,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.mynewsapp.R
 import com.example.mynewsapp.models.Article
 
+/**
+ * ViewHolder Class to handle the view of single News Item View
+ * @param itemView It is the view of the News Item
+ */
 class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val title: TextView
     private val poster: ImageView
@@ -24,6 +28,9 @@ class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         description = itemView.findViewById(R.id.description)
     }
 
+    /**
+     * It binds the data with the View
+     */
     fun bind(
         data: Article?,
         context: Context

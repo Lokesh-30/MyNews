@@ -7,6 +7,10 @@ import com.example.mynewsapp.retrofit.ApiServices
 import com.example.mynewsapp.utils.Constants
 import java.lang.Exception
 
+/**
+ * Handles the pagination, data emission and error handling
+ * @param search contains the string to be searched for the user
+ */
 class NewsPagingSource(private val apiServices: ApiServices, private val search: String) :
     PagingSource<Int, Article>() {
 

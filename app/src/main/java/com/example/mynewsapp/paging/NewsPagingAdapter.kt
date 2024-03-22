@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.mynewsapp.R
 import com.example.mynewsapp.models.Article
 
+/**
+ * Adapter handles the communication between the UI Layer and the News Data Layer
+ */
 class NewsPagingAdapter(
     private val context: Context
 ) :

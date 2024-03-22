@@ -6,12 +6,16 @@ import com.example.mynewsapp.models.Article
 import com.example.mynewsapp.retrofit.ApiServices
 import java.lang.Exception
 
-class NewsPagingSource(private val apiServices: ApiServices) : PagingSource<Int, Article>() {
+class NewsPagingSource(private val apiServices: ApiServices, private val search: String) :
+    PagingSource<Int, Article>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         return try {
             val pageNumber = params.key ?: 0
-            val response = apiServices.getTopHeadings()
+            val response =
+                if (search.isEmpty()) apiServices.getTopHeadings() else apiServices.searchNews(
+                    search
+                )
 
             return LoadResult.Page(
                 data = response.body()?.articles ?: emptyList(),

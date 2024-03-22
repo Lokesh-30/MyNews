@@ -5,5 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.MyNewsApp" parent="Base.Theme.MyNewsApp" />
+    <style name="Theme.MyNewsApp" parent="Base.Theme.MyNewsApp">
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    </style>
 </resources>

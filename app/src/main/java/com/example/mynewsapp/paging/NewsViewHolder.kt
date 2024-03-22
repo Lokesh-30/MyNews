@@ -29,7 +29,10 @@ class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         context: Context
     ) {
         title.text = data?.title ?: ""
-        description.text = data?.description
+        if (data?.description.isNullOrBlank())
+            description.visibility = View.GONE
+        else description.text = data?.description
+
         Glide.with(context)
             .load(data?.urlToImage)
             .diskCacheStrategy(DiskCacheStrategy.ALL)

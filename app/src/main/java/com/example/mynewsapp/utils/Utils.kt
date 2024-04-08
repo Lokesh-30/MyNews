@@ -3,6 +3,7 @@ package com.example.mynewsapp.utils
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.mynewsapp.NewsApp
@@ -20,4 +21,12 @@ fun checkForInternet(context: Context = NewsApp().applicationContext): Boolean {
 
 fun <T> LifecycleOwner.observe(liveData: LiveData<T>, action: (t: T) -> Unit) {
     liveData.observe(this) { it?.let { t -> action(t) } }
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    this.visibility = View.GONE
 }

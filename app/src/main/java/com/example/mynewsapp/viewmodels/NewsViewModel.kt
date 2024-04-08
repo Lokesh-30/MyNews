@@ -15,5 +15,7 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(private val repository: NewsRepository) : ViewModel() {
 
     val errorHandler: MutableLiveData<String> = MutableLiveData()
-    fun getNews(search: String) = repository.getNews(search, errorHandler).cachedIn(viewModelScope)
+    fun getNews(search: String) = repository.getNews(search) {
+        errorHandler.postValue(it)
+    }.cachedIn(viewModelScope)
 }

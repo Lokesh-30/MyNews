@@ -1,6 +1,5 @@
 package com.example.mynewsapp.paging
 
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.mynewsapp.models.Article
@@ -15,35 +14,36 @@ import java.lang.Exception
 class NewsPagingSource(
     private val apiServices: ApiServices,
     private val search: String,
-    private val errorHandler: MutableLiveData<String>
+    private val errorHandler: (String) -> Unit
 ) :
     PagingSource<Int, Article>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
         return try {
+
             val pageNumber = params.key ?: 1
             val response =
                 if (search.isEmpty()) apiServices.getTopHeadings(page = pageNumber) else apiServices.searchNews(
                     query = search, page = pageNumber
                 )
             val list = response.body()?.articles?.filter { it.title != "[Removed]" }
+
             return if (response.isSuccessful) {
                 if (pageNumber == 1 && list.isNullOrEmpty()) {
-                    errorHandler.value = Constants.Error.NO_RESULTS
-                    LoadResult.Error(Throwable(Constants.Error.NO_RESULTS))
-                }
-                else LoadResult.Page(
-                    data = list ?: emptyList(),
-                    prevKey = if (pageNumber > 1) pageNumber - 1 else null,
-                    nextKey = if ((response.body()?.articles?.size
-                            ?: 0) < 10
-                    ) null else pageNumber + 1
+                    handleError(status = Constants.Error.NO_RESULTS)
+                } else {
+                    errorHandler(Constants.Error.OK)
+                    LoadResult.Page(
+                        data = list ?: emptyList(),
+                        prevKey = if (pageNumber > 1) pageNumber - 1 else null,
+                        nextKey = if ((response.body()?.articles?.size
+                                ?: 0) < 10
+                        ) null else pageNumber + 1
 
-                )
-            } else {
-                errorHandler.value = Constants.Error.SOMETHING_WENT_WRONG
-                LoadResult.Error(Throwable(Constants.Error.SOMETHING_WENT_WRONG))
-            }
+                    )
+                }
+            } else handleError(status = Constants.Error.SOMETHING_WENT_WRONG)
+
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
@@ -56,4 +56,8 @@ class NewsPagingSource(
         }
     }
 
+    private fun handleError(status: String): LoadResult.Error<Int, Article> {
+        errorHandler(status)
+        return LoadResult.Error(Throwable(status))
+    }
 }

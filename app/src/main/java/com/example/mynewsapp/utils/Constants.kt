@@ -15,6 +15,7 @@ object Constants {
     object Error {
         const val NO_RESULTS = "No Results Found"
         const val SOMETHING_WENT_WRONG = "Something went wrong"
+        const val OK = "Ok"
         const val NO_INTERNET = "No Internet"
     }
 }

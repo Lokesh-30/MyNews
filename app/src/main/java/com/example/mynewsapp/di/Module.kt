@@ -1,7 +1,7 @@
 package com.example.mynewsapp.di
 
-import com.example.mynewsapp.NewsApp
 import com.example.mynewsapp.retrofit.ApiServices
+import com.example.mynewsapp.retrofit.RestClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +21,6 @@ class Module {
     @Singleton
     @Provides
     fun provideApiServices(): ApiServices {
-        return  NewsApp().getRestClient().getApiService()
+        return  RestClient.Builder().initialize().build().getApiService()
     }
 }

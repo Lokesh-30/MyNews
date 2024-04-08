@@ -1,17 +1,18 @@
 package com.example.mynewsapp.search
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mynewsapp.paging.NewsPagingAdapter
 import com.example.mynewsapp.viewmodels.NewsViewModel
 import com.example.mynewsapp.databinding.ActivityMainBinding
 import com.example.mynewsapp.utils.Constants
 import com.example.mynewsapp.utils.checkForInternet
+import com.example.mynewsapp.utils.hide
 import com.example.mynewsapp.utils.observe
+import com.example.mynewsapp.utils.show
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     private lateinit var newsViewModel: NewsViewModel
-    private lateinit var adapter: NewsPagingAdapter
+    private lateinit var newsAdapter: NewsPagingAdapter
     private lateinit var mainBinding: ActivityMainBinding
     private val compositeDisposable = CompositeDisposable()
 
@@ -38,18 +39,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun errorHandler(error: String) {
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        if (error == Constants.Error.OK) {
+            mainBinding.apply {
+                clError.hide()
+                rvNewsList.show()
+            }
+            return
+        }
+        error.showError()
     }
 
     /**
      * It handles the initializing and binding of the required views
      */
-    @SuppressLint("CheckResult")
     private fun initViews() {
-        adapter = NewsPagingAdapter(this)
-        mainBinding.rvNewsList.layoutManager = LinearLayoutManager(this)
-        mainBinding.rvNewsList.setHasFixedSize(true)
-        mainBinding.rvNewsList.adapter = adapter
+        newsAdapter = NewsPagingAdapter(this)
+        mainBinding.rvNewsList.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            setHasFixedSize(true)
+            adapter = newsAdapter
+        }
 
         /**
          * Handles the population of multiple inputs and returns only the final input
@@ -59,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             .debounce(300, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { text ->
+                newsAdapter.submitData(lifecycle, PagingData.empty())
                 hitNewsApi(text)
             }
 
@@ -71,9 +81,17 @@ class MainActivity : AppCompatActivity() {
     private fun hitNewsApi(search: String = "") {
         if (checkForInternet(this))
             newsViewModel.getNews(search).observe(this) {
-                adapter.submitData(lifecycle, it)
+                newsAdapter.submitData(lifecycle, it)
             }
-        else Toast.makeText(this, Constants.Error.NO_INTERNET, Toast.LENGTH_SHORT).show()
+        else Constants.Error.NO_INTERNET.showError()
+    }
+
+    private fun String.showError() {
+        mainBinding.apply {
+            rvNewsList.hide()
+            clError.show()
+            tvError.text = this@showError
+        }
     }
 
     override fun onDestroy() {
